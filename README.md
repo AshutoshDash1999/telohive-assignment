@@ -2,6 +2,8 @@
 
 This project is a Next.js App Router dashboard for discovering spaces, saving favorites, viewing bookings, and tracking activity.
 
+Live URL: https://telohive-assignment.vercel.app
+
 ## Tech Stack
 
 - Next.js 16 (App Router), React 19, TypeScript
