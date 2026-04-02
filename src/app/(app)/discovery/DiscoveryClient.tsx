@@ -1,14 +1,9 @@
 "use client";
 
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { fetchSpaces, spacesQueryKey } from "@/lib/api/spaces";
-import {
-  parseSpacesQueryFromSearchParams,
-  toSpacesSearchParams,
-} from "@/lib/discovery/query-state";
 import { useSavedSpacesStore } from "@/store/saved-spaces-store";
 import type { SpacesQueryParams } from "@/types/api";
 import { ActiveFilterChips } from "./_components/ActiveFilterChips";
@@ -18,6 +13,7 @@ import { DiscoveryToolbar } from "./_components/DiscoveryToolbar";
 import { FiltersModal } from "./_components/FiltersModal";
 import { SpacesGrid } from "./_components/SpacesGrid";
 import { type FilterSectionKey } from "./_components/filterSections";
+import { useDiscoveryFilters } from "./useDiscoveryFilters";
 
 interface DiscoveryClientProps {
   initialQuery: SpacesQueryParams;
@@ -32,85 +28,34 @@ function getErrorMessage(error: unknown) {
 }
 
 export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [searchInput, setSearchInput] = useState(initialQuery.q);
-  const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
-  const [activeFilterSection, setActiveFilterSection] =
-    useState<FilterSectionKey>("category");
-  const [draftFilters, setDraftFilters] = useState<SpacesQueryParams | null>(null);
+  const {
+    searchInput,
+    setSearchInput,
+    urlQuery,
+    updateQuery,
+    isFiltersModalOpen,
+    activeFilterSection,
+    setActiveFilterSection,
+    activeFilterValues,
+    hasActiveFilters,
+    activeFilterCount,
+    activeChips,
+    openFiltersModal,
+    closeFiltersModal,
+    applyFilters,
+    clearAllDraftFilters,
+    toggleMultiSelect,
+    setDraftMinPrice,
+    setDraftMaxPrice,
+    setDraftMinCapacity,
+    setDraftMaxCapacity,
+    setDraftMinRating,
+    setDraftAvailabilityDate,
+    onRemoveSearch,
+  } = useDiscoveryFilters(initialQuery);
   const savedSpaceIds = useSavedSpacesStore((state) => state.savedSpaceIds);
   const toggleSavedSpace = useSavedSpacesStore((state) => state.toggleSavedSpace);
   const savedIds = useMemo(() => new Set(savedSpaceIds), [savedSpaceIds]);
-
-  const urlQuery = useMemo(
-    () => parseSpacesQueryFromSearchParams(new URLSearchParams(searchParams.toString())),
-    [searchParams]
-  );
-
-  const updateQuery = useCallback(
-    (recipe: (current: SpacesQueryParams) => SpacesQueryParams) => {
-      const next = recipe(urlQuery);
-      const params = toSpacesSearchParams(next);
-      const queryString = params.toString();
-      const href = queryString ? `/discovery?${queryString}` : "/discovery";
-      router.replace(href, { scroll: false });
-    },
-    [router, urlQuery]
-  );
-
-  const activeFilterValues = isFiltersModalOpen && draftFilters ? draftFilters : urlQuery;
-
-  const openFiltersModal = useCallback(() => {
-    setDraftFilters(urlQuery);
-    setIsFiltersModalOpen(true);
-  }, [urlQuery]);
-
-  const closeFiltersModal = useCallback(() => {
-    setIsFiltersModalOpen(false);
-    setDraftFilters(null);
-  }, []);
-
-  const applyFilters = useCallback(() => {
-    if (!draftFilters) {
-      closeFiltersModal();
-      return;
-    }
-
-    updateQuery((current) => {
-      return {
-        ...current,
-        categories: draftFilters.categories,
-        cities: draftFilters.cities,
-        amenities: draftFilters.amenities,
-        minPrice: draftFilters.minPrice,
-        maxPrice: draftFilters.maxPrice,
-        minCapacity: draftFilters.minCapacity,
-        maxCapacity: draftFilters.maxCapacity,
-        minRating: draftFilters.minRating,
-        availabilityDate: draftFilters.availabilityDate,
-        page: 1,
-      };
-    });
-    closeFiltersModal();
-  }, [closeFiltersModal, draftFilters, updateQuery]);
-
-  useEffect(() => {
-    const timeoutId = window.setTimeout(() => {
-      const trimmed = searchInput.trim();
-      if (trimmed !== urlQuery.q) {
-        updateQuery((current) => ({
-          ...current,
-          q: trimmed,
-          page: 1,
-        }));
-      }
-    }, 300);
-
-    return () => {
-      window.clearTimeout(timeoutId);
-    };
-  }, [searchInput, updateQuery, urlQuery.q]);
 
   const spacesQuery = useQuery({
     queryKey: spacesQueryKey(urlQuery),
@@ -131,112 +76,6 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
   const totalPages = meta?.totalPages ?? 1;
   const showingFrom = spaces.length === 0 ? 0 : (page - 1) * pageSize + 1;
   const showingTo = spaces.length === 0 ? 0 : showingFrom + spaces.length - 1;
-
-  const hasActiveFilters = useMemo(() => {
-    return (
-      urlQuery.q.length > 0 ||
-      urlQuery.categories.length > 0 ||
-      urlQuery.cities.length > 0 ||
-      urlQuery.amenities.length > 0 ||
-      urlQuery.minPrice !== null ||
-      urlQuery.maxPrice !== null ||
-      urlQuery.minCapacity !== null ||
-      urlQuery.maxCapacity !== null ||
-      urlQuery.minRating !== null ||
-      urlQuery.availabilityDate.length > 0
-    );
-  }, [urlQuery]);
-
-  const activeFilterCount = useMemo(() => {
-    return (
-      urlQuery.categories.length +
-      urlQuery.cities.length +
-      urlQuery.amenities.length +
-      (urlQuery.minPrice !== null ? 1 : 0) +
-      (urlQuery.maxPrice !== null ? 1 : 0) +
-      (urlQuery.minCapacity !== null ? 1 : 0) +
-      (urlQuery.maxCapacity !== null ? 1 : 0) +
-      (urlQuery.minRating !== null ? 1 : 0) +
-      (urlQuery.availabilityDate.length > 0 ? 1 : 0)
-    );
-  }, [urlQuery]);
-
-  function toggleMultiSelect(
-    key: "categories" | "cities" | "amenities",
-    value: string
-  ) {
-    setDraftFilters((current) => {
-      if (!current) {
-        return current;
-      }
-
-      const currentSet = new Set(current[key]);
-      if (currentSet.has(value)) {
-        currentSet.delete(value);
-      } else {
-        currentSet.add(value);
-      }
-
-      return {
-        ...current,
-        [key]: [...currentSet].toSorted(),
-      };
-    });
-  }
-
-  function onClearAllFilters() {
-    setDraftFilters((current) => {
-      if (!current) {
-        return current;
-      }
-
-      return {
-        ...current,
-        categories: [],
-        cities: [],
-        amenities: [],
-        minPrice: null,
-        maxPrice: null,
-        minCapacity: null,
-        maxCapacity: null,
-        minRating: null,
-        availabilityDate: "",
-      };
-    });
-  }
-
-  const activeChips = [
-    ...urlQuery.categories.map((value) => ({
-      key: `category-${value}`,
-      label: `Category: ${value}`,
-      onRemove: () =>
-        updateQuery((current) => ({
-          ...current,
-          categories: current.categories.filter((item) => item !== value),
-          page: 1,
-        })),
-    })),
-    ...urlQuery.cities.map((value) => ({
-      key: `city-${value}`,
-      label: `City: ${value}`,
-      onRemove: () =>
-        updateQuery((current) => ({
-          ...current,
-          cities: current.cities.filter((item) => item !== value),
-          page: 1,
-        })),
-    })),
-    ...urlQuery.amenities.map((value) => ({
-      key: `amenity-${value}`,
-      label: `Amenity: ${value}`,
-      onRemove: () =>
-        updateQuery((current) => ({
-          ...current,
-          amenities: current.amenities.filter((item) => item !== value),
-          page: 1,
-        })),
-    })),
-  ];
 
   function renderFilterSectionContent(section: FilterSectionKey) {
     switch (section) {
@@ -302,16 +141,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
                 min={meta?.available.minPrice ?? 0}
                 max={meta?.available.maxPrice ?? 10000}
                 placeholder={`Min (${meta?.available.minPrice ?? 0})`}
-                onChange={(event) =>
-                  setDraftFilters((current) =>
-                    current
-                      ? {
-                          ...current,
-                          minPrice: event.target.value ? Number(event.target.value) : null,
-                        }
-                      : current
-                  )
-                }
+                onChange={(event) => setDraftMinPrice(event.target.value)}
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
               <input
@@ -321,16 +151,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
                 min={meta?.available.minPrice ?? 0}
                 max={meta?.available.maxPrice ?? 10000}
                 placeholder={`Max (${meta?.available.maxPrice ?? 0})`}
-                onChange={(event) =>
-                  setDraftFilters((current) =>
-                    current
-                      ? {
-                          ...current,
-                          maxPrice: event.target.value ? Number(event.target.value) : null,
-                        }
-                      : current
-                  )
-                }
+                onChange={(event) => setDraftMaxPrice(event.target.value)}
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
             </div>
@@ -348,16 +169,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
                 min={meta?.available.minCapacity ?? 0}
                 max={meta?.available.maxCapacity ?? 500}
                 placeholder="Min"
-                onChange={(event) =>
-                  setDraftFilters((current) =>
-                    current
-                      ? {
-                          ...current,
-                          minCapacity: event.target.value ? Number(event.target.value) : null,
-                        }
-                      : current
-                  )
-                }
+                onChange={(event) => setDraftMinCapacity(event.target.value)}
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
               <input
@@ -367,16 +179,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
                 min={meta?.available.minCapacity ?? 0}
                 max={meta?.available.maxCapacity ?? 500}
                 placeholder="Max"
-                onChange={(event) =>
-                  setDraftFilters((current) =>
-                    current
-                      ? {
-                          ...current,
-                          maxCapacity: event.target.value ? Number(event.target.value) : null,
-                        }
-                      : current
-                  )
-                }
+                onChange={(event) => setDraftMaxCapacity(event.target.value)}
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
             </div>
@@ -388,16 +191,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
             <p className="text-xs font-semibold uppercase text-zinc-500">Minimum Rating</p>
             <select
               value={activeFilterValues.minRating ?? ""}
-              onChange={(event) =>
-                setDraftFilters((current) =>
-                  current
-                    ? {
-                        ...current,
-                        minRating: event.target.value ? Number(event.target.value) : null,
-                      }
-                    : current
-                )
-              }
+              onChange={(event) => setDraftMinRating(event.target.value)}
               className="w-full max-w-xs rounded border border-zinc-300 px-2 py-1 text-sm"
             >
               <option value="">Any rating</option>
@@ -422,16 +216,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
               id="availabilityDate"
               type="date"
               value={activeFilterValues.availabilityDate}
-              onChange={(event) =>
-                setDraftFilters((current) =>
-                  current
-                    ? {
-                        ...current,
-                        availabilityDate: event.target.value,
-                      }
-                    : current
-                )
-              }
+              onChange={(event) => setDraftAvailabilityDate(event.target.value)}
               className="w-full max-w-xs rounded border border-zinc-300 px-2 py-1 text-sm"
             />
             <p className="text-xs text-zinc-500">
@@ -473,10 +258,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
         <ActiveFilterChips
           searchQuery={urlQuery.q}
           chips={activeChips}
-          onRemoveSearch={() => {
-            setSearchInput("");
-            updateQuery((current) => ({ ...current, q: "", page: 1 }));
-          }}
+          onRemoveSearch={onRemoveSearch}
         />
       ) : null}
 
@@ -535,7 +317,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
         activeFilterSection={activeFilterSection}
         onSelectSection={setActiveFilterSection}
         onClose={closeFiltersModal}
-        onClearAll={onClearAllFilters}
+        onClearAll={clearAllDraftFilters}
         onApply={applyFilters}
         renderSectionContent={renderFilterSectionContent}
       />

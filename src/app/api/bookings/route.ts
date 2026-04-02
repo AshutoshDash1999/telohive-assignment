@@ -31,14 +31,14 @@ export async function GET() {
     const db = await readDb();
     const spaceById = new Map(db.spaces.map((space) => [space.id, space]));
 
-    const items: BookingListItem[] = db.bookings
-      .map((booking) => {
+    const items = db.bookings
+      .reduce<BookingListItem[]>((acc, booking) => {
         const space = spaceById.get(booking.spaceId);
         if (!space) {
-          return null;
+          return acc;
         }
 
-        return {
+        acc.push({
           id: booking.id,
           spaceId: booking.spaceId,
           spaceName: space.name,
@@ -48,9 +48,9 @@ export async function GET() {
           type: space.category,
           status: booking.status,
           amount: booking.totalPrice,
-        } satisfies BookingListItem;
-      })
-      .filter((item): item is BookingListItem => item !== null)
+        });
+        return acc;
+      }, [])
       .toSorted((a, b) => b.id - a.id);
 
     return apiSuccess(items);

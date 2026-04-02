@@ -1,52 +1,39 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useCallback, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import { fetchBookings, patchBookingStatus, type BookingListItem } from "@/lib/api/bookings";
-import {
-  parseBookingsQueryFromSearchParams,
-  toBookingsSearchParams,
-  type BookingsQueryParams,
-} from "@/lib/bookings/query-state";
-import type { BookingStatus } from "@/types/entities";
 import type { SortDirection, SortField } from "./bookings-table-types";
-import { applySort, downloadBookingsCsv, matchesDateRange } from "./bookings-table-utils";
+import { applySort, downloadBookingsCsv } from "./bookings-table-utils";
+import { useBookingsFilters } from "./useBookingsFilters";
 
 export function useBookingsTable() {
-  const router = useRouter();
-  const searchParams = useSearchParams();
   const queryClient = useQueryClient();
   const [selectedBookingIds, setSelectedBookingIds] = useState<number[]>([]);
-
-  const urlQuery = useMemo(
-    () => parseBookingsQueryFromSearchParams(new URLSearchParams(searchParams.toString())),
-    [searchParams]
-  );
-
-  const searchValue = urlQuery.q;
-  const selectedStatuses = urlQuery.statuses;
-  const startDate = urlQuery.startDate;
-  const endDate = urlQuery.endDate;
-  const sortField = urlQuery.sortField as SortField;
-  const sortDirection = urlQuery.sortDirection as SortDirection;
-
-  const updateQuery = useCallback(
-    (recipe: (current: BookingsQueryParams) => BookingsQueryParams) => {
-      const next = recipe(urlQuery);
-      const params = toBookingsSearchParams(next);
-      const queryString = params.toString();
-      const href = queryString ? `/bookings?${queryString}` : "/bookings";
-      router.replace(href, { scroll: false });
-    },
-    [router, urlQuery]
-  );
 
   const bookingsQuery = useQuery({
     queryKey: ["bookings"],
     queryFn: () => fetchBookings(),
   });
+
+  const {
+    urlQuery,
+    filteredBookings,
+    searchValue,
+    setSearchValue,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    selectedStatuses,
+    toggleStatus,
+    clearFilters,
+    updateQuery,
+  } = useBookingsFilters({ bookings: bookingsQuery.data });
+
+  const sortField = urlQuery.sortField as SortField;
+  const sortDirection = urlQuery.sortDirection as SortDirection;
 
   const cancelOneMutation = useMutation({
     mutationFn: (bookingId: number) => patchBookingStatus(bookingId, "cancelled"),
@@ -80,22 +67,6 @@ export function useBookingsTable() {
       });
     },
   });
-
-  const filteredBookings = useMemo(() => {
-    const items = bookingsQuery.data ?? [];
-    const lowerSearch = searchValue.trim().toLowerCase();
-    const selectedStatusSet = new Set(selectedStatuses);
-
-    return items.filter((item) => {
-      const matchesSearch =
-        lowerSearch.length === 0 || item.spaceName.toLowerCase().includes(lowerSearch);
-      const matchesStatus =
-        selectedStatusSet.size === 0 || selectedStatusSet.has(item.status);
-      const matchesDate = matchesDateRange(item, startDate, endDate);
-
-      return matchesSearch && matchesStatus && matchesDate;
-    });
-  }, [bookingsQuery.data, searchValue, selectedStatuses, startDate, endDate]);
 
   const visibleBookings = useMemo(() => {
     return applySort(filteredBookings, sortField, sortDirection);
@@ -134,22 +105,6 @@ export function useBookingsTable() {
       return {
         ...current,
         sortDirection: current.sortDirection === "asc" ? "desc" : "asc",
-      };
-    });
-  }
-
-  function toggleStatus(status: BookingStatus) {
-    updateQuery((current) => {
-      const statusSet = new Set(current.statuses);
-      if (statusSet.has(status)) {
-        statusSet.delete(status);
-      } else {
-        statusSet.add(status);
-      }
-
-      return {
-        ...current,
-        statuses: [...statusSet],
       };
     });
   }
@@ -200,39 +155,17 @@ export function useBookingsTable() {
     downloadBookingsCsv(rowsToExport);
   }
 
-  function clearFilters() {
-    updateQuery((current) => ({
-      ...current,
-      q: "",
-      statuses: [],
-      startDate: "",
-      endDate: "",
-    }));
-  }
-
   function isRowCancelling(bookingId: number) {
     return cancelOneMutation.isPending && cancelOneMutation.variables === bookingId;
   }
 
   return {
     searchValue,
-    setSearchValue: (value: string) =>
-      updateQuery((current) => ({
-        ...current,
-        q: value,
-      })),
+    setSearchValue,
     startDate,
-    setStartDate: (value: string) =>
-      updateQuery((current) => ({
-        ...current,
-        startDate: value,
-      })),
+    setStartDate,
     endDate,
-    setEndDate: (value: string) =>
-      updateQuery((current) => ({
-        ...current,
-        endDate: value,
-      })),
+    setEndDate,
     selectedStatuses,
     toggleStatus,
     clearFilters,
