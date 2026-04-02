@@ -12,18 +12,17 @@
 
 ## Step 1 - Project Foundation and Tooling
 
-- [ ] Add core dependencies:
-  - [ ] `@tanstack/react-query`
-  - [ ] `zustand`
-  - [ ] `json-server`
-  - [ ] `recharts`
-  - [ ] `zod` (form validation)
-  - [ ] testing stack (`vitest`, `@testing-library/react`, `@testing-library/jest-dom`)
-- [ ] Add scripts for app + mock API (separate processes)
-- [ ] Set up folder structure for app routes, components, hooks, store, lib, types
-- [ ] Set up Husky + commit-msg hook (Conventional Commits)
-- [ ] Add commit linting setup (if used) for commit message validation
-- [ ] Commit: `chore(setup): initialize tooling, scripts, and project structure`
+- [x] Add core dependencies:
+  - [x] `@tanstack/react-query`
+  - [x] `zustand`
+  - [x] `json-server`
+  - [x] `recharts`
+  - [x] `zod` (form validation)
+  - [x] testing stack (`@playwright/test`)
+- [x] Add scripts for app + mock API (separate processes)
+- [x] Set up folder structure for app routes, components, hooks, store, lib, types
+- [x] Set up Husky + commit-msg hook (Conventional Commits)
+- [x] Add commit linting setup (if used) for commit message validation
 
 ## Step 2 - Mock API and Seed Data
 
