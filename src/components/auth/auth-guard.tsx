@@ -21,6 +21,8 @@ export function AuthGuard({ children }: AuthGuardProps) {
 
   useEffect(() => {
     if (isHydrated && !isAuthenticated) {
+      // Server-first auth boundary is handled by proxy + protected layout.
+      // Keep a client fallback redirect for cookie/storage mismatch edge cases.
       router.replace("/login");
     }
   }, [isAuthenticated, isHydrated, router]);

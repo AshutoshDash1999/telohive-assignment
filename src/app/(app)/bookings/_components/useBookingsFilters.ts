@@ -9,7 +9,7 @@ import {
   type BookingsQueryParams,
 } from "@/lib/bookings/query-state";
 import type { BookingStatus } from "@/types/entities";
-import type { BookingListItem } from "@/lib/api/bookings";
+import type { BookingListItem } from "@/types/bookings";
 import { matchesDateRange } from "./bookings-table-utils";
 
 interface UseBookingsFiltersParams {

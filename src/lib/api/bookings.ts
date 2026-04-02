@@ -1,18 +1,7 @@
 import { API_ENDPOINTS } from "@/lib/api/endpoints";
 import type { ApiResponse } from "@/types/api";
-import type { BookingStatus, SpaceCategory } from "@/types/entities";
-
-export interface BookingListItem {
-  id: number;
-  spaceId: number;
-  spaceName: string;
-  date: string;
-  startDate: string;
-  endDate: string;
-  type: SpaceCategory;
-  status: BookingStatus;
-  amount: number;
-}
+import type { BookingStatus } from "@/types/entities";
+import type { BookingListItem } from "@/types/bookings";
 
 interface BookingListApiSuccessPayload {
   success: true;

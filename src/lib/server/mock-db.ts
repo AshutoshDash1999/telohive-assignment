@@ -1,7 +1,14 @@
 import { promises as fs } from "node:fs";
 import path from "node:path";
 
-import type { Booking, BookingStatus, MockDb, SavedItem, Space, SpaceCategory } from "@/types/entities";
+import {
+  BOOKING_STATUSES,
+  type Booking,
+  type MockDb,
+  type SavedItem,
+  type Space,
+  type SpaceCategory,
+} from "@/types/entities";
 
 const DB_PATH = path.join(process.cwd(), "db.json");
 
@@ -64,8 +71,6 @@ const SUFFIXES = [
   "Space",
   "Center",
 ];
-
-const BOOKING_STATUSES: BookingStatus[] = ["confirmed", "pending", "cancelled"];
 
 function randomInt(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;

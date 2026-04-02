@@ -1,3 +1,4 @@
+import { isBookingStatus } from "@/lib/bookings/status";
 import type { BookingStatus } from "@/types/entities";
 
 export type BookingsSortField = "spaceName" | "startDate" | "type" | "status" | "amount";
@@ -20,10 +21,6 @@ export const DEFAULT_BOOKINGS_QUERY: BookingsQueryParams = {
   sortField: "startDate",
   sortDirection: "desc",
 };
-
-function isValidStatus(value: string): value is BookingStatus {
-  return value === "pending" || value === "confirmed" || value === "cancelled";
-}
 
 function isValidSortField(value: string): value is BookingsSortField {
   return (
@@ -50,7 +47,7 @@ export function parseBookingsQueryFromSearchParams(
     .getAll("status")
     .flatMap((item) => item.split(","))
     .map((item) => item.trim())
-    .filter(isValidStatus);
+    .filter(isBookingStatus);
 
   const sortFieldCandidate = searchParams.get("sort")?.trim() ?? "";
   const sortDirectionCandidate = searchParams.get("dir")?.trim() ?? "";

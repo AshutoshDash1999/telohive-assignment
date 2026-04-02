@@ -1,4 +1,4 @@
-import type { BookingListItem } from "@/lib/api/bookings";
+import type { BookingListItem } from "@/types/bookings";
 import type { BookingStatus } from "@/types/entities";
 
 import type { SortDirection, SortField } from "./bookings-table-types";

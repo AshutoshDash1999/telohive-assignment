@@ -1,13 +1,11 @@
-import type { BookingListItem } from "@/lib/api/bookings";
+import { BOOKING_STATUS_OPTIONS } from "@/lib/bookings/status";
+import { formatUsdCurrency } from "@/lib/format/currency";
+import type { BookingListItem } from "@/types/bookings";
 import type { BookingStatus } from "@/types/entities";
 
 import type { SortDirection, SortField, StatusOption } from "./bookings-table-types";
 
-export const STATUS_OPTIONS: StatusOption[] = [
-  { value: "pending", label: "Pending" },
-  { value: "confirmed", label: "Confirmed" },
-  { value: "cancelled", label: "Cancelled" },
-];
+export const STATUS_OPTIONS: StatusOption[] = [...BOOKING_STATUS_OPTIONS];
 
 export function getErrorMessage(error: unknown) {
   if (error instanceof Error) {
@@ -17,13 +15,7 @@ export function getErrorMessage(error: unknown) {
   return "Something went wrong while loading bookings.";
 }
 
-export function toCurrency(value: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    maximumFractionDigits: 0,
-  }).format(value);
-}
+export const toCurrency = formatUsdCurrency;
 
 export function toStatusLabel(status: BookingStatus) {
   switch (status) {

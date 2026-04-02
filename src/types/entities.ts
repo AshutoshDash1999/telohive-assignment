@@ -5,7 +5,9 @@ export type SpaceCategory =
   | "Event Space"
   | "Studio";
 
-export type BookingStatus = "confirmed" | "pending" | "cancelled";
+export const BOOKING_STATUSES = ["confirmed", "pending", "cancelled"] as const;
+
+export type BookingStatus = (typeof BOOKING_STATUSES)[number];
 
 export interface Space {
   id: number;

@@ -43,7 +43,12 @@ interface UseDiscoveryFiltersResult {
 }
 
 function toNullableNumber(value: string) {
-  return value ? Number(value) : null;
+  if (!value) {
+    return null;
+  }
+
+  const parsed = Number(value);
+  return Number.isFinite(parsed) ? parsed : null;
 }
 
 export function useDiscoveryFilters(initialQuery: SpacesQueryParams): UseDiscoveryFiltersResult {

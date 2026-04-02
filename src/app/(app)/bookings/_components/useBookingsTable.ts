@@ -3,7 +3,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 
-import { fetchBookings, patchBookingStatus, type BookingListItem } from "@/lib/api/bookings";
+import { fetchBookings, patchBookingStatus } from "@/lib/api/bookings";
+import type { BookingListItem } from "@/types/bookings";
 import type { SortDirection, SortField } from "./bookings-table-types";
 import { applySort, downloadBookingsCsv } from "./bookings-table-utils";
 import { useBookingsFilters } from "./useBookingsFilters";

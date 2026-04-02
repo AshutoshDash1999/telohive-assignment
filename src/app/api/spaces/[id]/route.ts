@@ -1,5 +1,6 @@
 import { apiError, apiSuccess } from "@/lib/api/response";
 import { readDb } from "@/lib/server/mock-db";
+import { parseNumericRouteParam } from "@/lib/server/route-params";
 
 interface Params {
   params: Promise<{ id: string }>;
@@ -9,9 +10,8 @@ interface Params {
 export async function GET(_: Request, { params }: Params) {
   try {
     const { id } = await params;
-    const spaceId = Number(id);
-
-    if (Number.isNaN(spaceId)) {
+    const spaceId = parseNumericRouteParam(id);
+    if (spaceId === null) {
       return apiError("INVALID_SPACE_ID", "Space id must be a number", 400);
     }
 

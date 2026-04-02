@@ -1,30 +1,7 @@
 import { apiError, apiSuccess } from "@/lib/api/response";
+import { formatDisplayDateRange } from "@/lib/format/date-range";
 import { readDb } from "@/lib/server/mock-db";
-import type { BookingStatus } from "@/types/entities";
-
-interface BookingListItem {
-  id: number;
-  spaceId: number;
-  spaceName: string;
-  date: string;
-  startDate: string;
-  endDate: string;
-  type: string;
-  status: BookingStatus;
-  amount: number;
-}
-
-function toDisplayDateRange(startDate: string, endDate: string) {
-  const formatter = new Intl.DateTimeFormat("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  const start = formatter.format(new Date(startDate));
-  const end = formatter.format(new Date(endDate));
-  return `${start} - ${end}`;
-}
+import type { BookingListItem } from "@/types/bookings";
 
 // Returns booking rows enriched with space details for table display.
 export async function GET() {
@@ -43,7 +20,7 @@ export async function GET() {
           id: booking.id,
           spaceId: booking.spaceId,
           spaceName: space.name,
-          date: toDisplayDateRange(booking.startDate, booking.endDate),
+          date: formatDisplayDateRange(booking.startDate, booking.endDate),
           startDate: booking.startDate,
           endDate: booking.endDate,
           type: space.category,
