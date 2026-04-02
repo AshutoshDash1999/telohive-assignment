@@ -48,6 +48,14 @@ function parseListFromRecord(
     .filter(Boolean);
 }
 
+function setListParam(params: URLSearchParams, key: string, values: string[]) {
+  if (values.length === 0) {
+    return;
+  }
+
+  params.set(key, values.join(","));
+}
+
 function parsePage(value: string | null, fallback: number) {
   const parsed = Number(value);
   return Number.isInteger(parsed) && parsed > 0 ? parsed : fallback;
@@ -169,17 +177,9 @@ export function toSpacesSearchParams(query: SpacesQueryParams): URLSearchParams 
     params.set("q", query.q);
   }
 
-  for (const category of query.categories) {
-    params.append("category", category);
-  }
-
-  for (const city of query.cities) {
-    params.append("city", city);
-  }
-
-  for (const amenity of query.amenities) {
-    params.append("amenity", amenity);
-  }
+  setListParam(params, "category", query.categories);
+  setListParam(params, "city", query.cities);
+  setListParam(params, "amenity", query.amenities);
 
   if (query.minPrice !== null) {
     params.set("minPrice", String(query.minPrice));

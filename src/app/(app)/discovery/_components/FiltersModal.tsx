@@ -11,6 +11,7 @@ interface FiltersModalProps {
   onSelectSection: (section: FilterSectionKey) => void;
   onClose: () => void;
   onClearAll: () => void;
+  onApply: () => void;
   renderSectionContent: (section: FilterSectionKey) => ReactNode;
 }
 
@@ -20,6 +21,7 @@ export function FiltersModal({
   onSelectSection,
   onClose,
   onClearAll,
+  onApply,
   renderSectionContent,
 }: FiltersModalProps) {
   useEffect(() => {
@@ -88,7 +90,7 @@ export function FiltersModal({
           </button>
           <button
             type="button"
-            onClick={onClose}
+            onClick={onApply}
             className="rounded-md bg-zinc-900 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-zinc-800"
           >
             Apply filters

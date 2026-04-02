@@ -68,27 +68,26 @@
 
 ## Step 5 - Discovery Search and Filter Engine
 
-- [ ] Fetch spaces with React Query
-- [ ] Implement full-text debounced search (name/location/description)
-- [ ] Implement AND-composed filters:
-  - [ ] category (multi-select)
-  - [ ] city (multi-select)
-  - [ ] dynamic price range
-  - [ ] capacity min-max
-  - [ ] amenities (multi-select)
-  - [ ] minimum rating
-  - [ ] availability date (or clearly marked optional)
-- [ ] Add active filter chips and clear-all behavior
-- [ ] Add live result count
-- [ ] Commit: `feat(discovery): implement search and composed filters`
+- [x] Fetch spaces with React Query
+- [x] Implement full-text debounced search (name/location/description)
+- [x] Implement AND-composed filters:
+  - [x] category (multi-select)
+  - [x] city (multi-select)
+  - [x] dynamic price range
+  - [x] capacity min-max
+  - [x] amenities (multi-select)
+  - [x] minimum rating
+  - [x] availability date (or clearly marked optional)
+- [x] Add active filter chips and clear-all behavior
+- [x] Add live result count
+- [x] Commit: `feat(discovery): implement search and composed filters`
 
 ## Step 6 - URL State Synchronization
 
-- [ ] Serialize filter/search/sort state to URL query params
-- [ ] Deserialize URL query params into initial UI state
-- [ ] Keep URL as source of truth for filters
-- [ ] Ensure refresh/shareable links preserve state
-- [ ] Commit: `feat(filters): sync discovery state with url query params`
+- [x] Serialize filter/search/sort state to URL query params
+- [x] Deserialize URL query params into initial UI state
+- [x] Keep URL as source of truth for filters
+- [x] Ensure refresh/shareable links preserve state
 
 ## Step 7 - Discovery Grid, Sorting, and Virtualization
 

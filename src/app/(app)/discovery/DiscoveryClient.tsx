@@ -38,6 +38,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [activeFilterSection, setActiveFilterSection] =
     useState<FilterSectionKey>("category");
+  const [draftFilters, setDraftFilters] = useState<SpacesQueryParams | null>(null);
   const savedSpaceIds = useSavedSpacesStore((state) => state.savedSpaceIds);
   const toggleSavedSpace = useSavedSpacesStore((state) => state.toggleSavedSpace);
   const savedIds = useMemo(() => new Set(savedSpaceIds), [savedSpaceIds]);
@@ -57,6 +58,42 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
     },
     [router, urlQuery]
   );
+
+  const activeFilterValues = isFiltersModalOpen && draftFilters ? draftFilters : urlQuery;
+
+  const openFiltersModal = useCallback(() => {
+    setDraftFilters(urlQuery);
+    setIsFiltersModalOpen(true);
+  }, [urlQuery]);
+
+  const closeFiltersModal = useCallback(() => {
+    setIsFiltersModalOpen(false);
+    setDraftFilters(null);
+  }, []);
+
+  const applyFilters = useCallback(() => {
+    if (!draftFilters) {
+      closeFiltersModal();
+      return;
+    }
+
+    updateQuery((current) => {
+      return {
+        ...current,
+        categories: draftFilters.categories,
+        cities: draftFilters.cities,
+        amenities: draftFilters.amenities,
+        minPrice: draftFilters.minPrice,
+        maxPrice: draftFilters.maxPrice,
+        minCapacity: draftFilters.minCapacity,
+        maxCapacity: draftFilters.maxCapacity,
+        minRating: draftFilters.minRating,
+        availabilityDate: draftFilters.availabilityDate,
+        page: 1,
+      };
+    });
+    closeFiltersModal();
+  }, [closeFiltersModal, draftFilters, updateQuery]);
 
   useEffect(() => {
     const timeoutId = window.setTimeout(() => {
@@ -128,7 +165,11 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
     key: "categories" | "cities" | "amenities",
     value: string
   ) {
-    updateQuery((current) => {
+    setDraftFilters((current) => {
+      if (!current) {
+        return current;
+      }
+
       const currentSet = new Set(current[key]);
       if (currentSet.has(value)) {
         currentSet.delete(value);
@@ -139,14 +180,29 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
       return {
         ...current,
         [key]: [...currentSet].toSorted(),
-        page: 1,
       };
     });
   }
 
   function onClearAllFilters() {
-    setSearchInput("");
-    router.replace("/discovery", { scroll: false });
+    setDraftFilters((current) => {
+      if (!current) {
+        return current;
+      }
+
+      return {
+        ...current,
+        categories: [],
+        cities: [],
+        amenities: [],
+        minPrice: null,
+        maxPrice: null,
+        minCapacity: null,
+        maxCapacity: null,
+        minRating: null,
+        availabilityDate: "",
+      };
+    });
   }
 
   const activeChips = [
@@ -192,7 +248,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
               <label key={category} className="flex items-center gap-2 text-sm text-zinc-700">
                 <input
                   type="checkbox"
-                  checked={urlQuery.categories.includes(category)}
+                  checked={activeFilterValues.categories.includes(category)}
                   onChange={() => toggleMultiSelect("categories", category)}
                 />
                 {category}
@@ -208,7 +264,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
               <label key={city} className="flex items-center gap-2 text-sm text-zinc-700">
                 <input
                   type="checkbox"
-                  checked={urlQuery.cities.includes(city)}
+                  checked={activeFilterValues.cities.includes(city)}
                   onChange={() => toggleMultiSelect("cities", city)}
                 />
                 {city}
@@ -225,7 +281,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
                 <label key={amenity} className="flex items-center gap-2 text-sm text-zinc-700">
                   <input
                     type="checkbox"
-                    checked={urlQuery.amenities.includes(amenity)}
+                    checked={activeFilterValues.amenities.includes(amenity)}
                     onChange={() => toggleMultiSelect("amenities", amenity)}
                   />
                   {amenity}
@@ -242,32 +298,38 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
               <input
                 type="number"
                 inputMode="numeric"
-                value={urlQuery.minPrice ?? ""}
+                value={activeFilterValues.minPrice ?? ""}
                 min={meta?.available.minPrice ?? 0}
                 max={meta?.available.maxPrice ?? 10000}
                 placeholder={`Min (${meta?.available.minPrice ?? 0})`}
                 onChange={(event) =>
-                  updateQuery((current) => ({
-                    ...current,
-                    minPrice: event.target.value ? Number(event.target.value) : null,
-                    page: 1,
-                  }))
+                  setDraftFilters((current) =>
+                    current
+                      ? {
+                          ...current,
+                          minPrice: event.target.value ? Number(event.target.value) : null,
+                        }
+                      : current
+                  )
                 }
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
               <input
                 type="number"
                 inputMode="numeric"
-                value={urlQuery.maxPrice ?? ""}
+                value={activeFilterValues.maxPrice ?? ""}
                 min={meta?.available.minPrice ?? 0}
                 max={meta?.available.maxPrice ?? 10000}
                 placeholder={`Max (${meta?.available.maxPrice ?? 0})`}
                 onChange={(event) =>
-                  updateQuery((current) => ({
-                    ...current,
-                    maxPrice: event.target.value ? Number(event.target.value) : null,
-                    page: 1,
-                  }))
+                  setDraftFilters((current) =>
+                    current
+                      ? {
+                          ...current,
+                          maxPrice: event.target.value ? Number(event.target.value) : null,
+                        }
+                      : current
+                  )
                 }
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
@@ -282,32 +344,38 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
               <input
                 type="number"
                 inputMode="numeric"
-                value={urlQuery.minCapacity ?? ""}
+                value={activeFilterValues.minCapacity ?? ""}
                 min={meta?.available.minCapacity ?? 0}
                 max={meta?.available.maxCapacity ?? 500}
                 placeholder="Min"
                 onChange={(event) =>
-                  updateQuery((current) => ({
-                    ...current,
-                    minCapacity: event.target.value ? Number(event.target.value) : null,
-                    page: 1,
-                  }))
+                  setDraftFilters((current) =>
+                    current
+                      ? {
+                          ...current,
+                          minCapacity: event.target.value ? Number(event.target.value) : null,
+                        }
+                      : current
+                  )
                 }
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
               <input
                 type="number"
                 inputMode="numeric"
-                value={urlQuery.maxCapacity ?? ""}
+                value={activeFilterValues.maxCapacity ?? ""}
                 min={meta?.available.minCapacity ?? 0}
                 max={meta?.available.maxCapacity ?? 500}
                 placeholder="Max"
                 onChange={(event) =>
-                  updateQuery((current) => ({
-                    ...current,
-                    maxCapacity: event.target.value ? Number(event.target.value) : null,
-                    page: 1,
-                  }))
+                  setDraftFilters((current) =>
+                    current
+                      ? {
+                          ...current,
+                          maxCapacity: event.target.value ? Number(event.target.value) : null,
+                        }
+                      : current
+                  )
                 }
                 className="w-full rounded border border-zinc-300 px-2 py-1 text-sm"
               />
@@ -319,13 +387,16 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
           <div className="space-y-2">
             <p className="text-xs font-semibold uppercase text-zinc-500">Minimum Rating</p>
             <select
-              value={urlQuery.minRating ?? ""}
+              value={activeFilterValues.minRating ?? ""}
               onChange={(event) =>
-                updateQuery((current) => ({
-                  ...current,
-                  minRating: event.target.value ? Number(event.target.value) : null,
-                  page: 1,
-                }))
+                setDraftFilters((current) =>
+                  current
+                    ? {
+                        ...current,
+                        minRating: event.target.value ? Number(event.target.value) : null,
+                      }
+                    : current
+                )
               }
               className="w-full max-w-xs rounded border border-zinc-300 px-2 py-1 text-sm"
             >
@@ -350,13 +421,16 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
             <input
               id="availabilityDate"
               type="date"
-              value={urlQuery.availabilityDate}
+              value={activeFilterValues.availabilityDate}
               onChange={(event) =>
-                updateQuery((current) => ({
-                  ...current,
-                  availabilityDate: event.target.value,
-                  page: 1,
-                }))
+                setDraftFilters((current) =>
+                  current
+                    ? {
+                        ...current,
+                        availabilityDate: event.target.value,
+                      }
+                    : current
+                )
               }
               className="w-full max-w-xs rounded border border-zinc-300 px-2 py-1 text-sm"
             />
@@ -392,7 +466,7 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
             page: 1,
           }))
         }
-        onOpenFilters={() => setIsFiltersModalOpen(true)}
+        onOpenFilters={openFiltersModal}
       />
 
       {hasActiveFilters ? (
@@ -460,8 +534,9 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
         isOpen={isFiltersModalOpen}
         activeFilterSection={activeFilterSection}
         onSelectSection={setActiveFilterSection}
-        onClose={() => setIsFiltersModalOpen(false)}
+        onClose={closeFiltersModal}
         onClearAll={onClearAllFilters}
+        onApply={applyFilters}
         renderSectionContent={renderFilterSectionContent}
       />
     </div>
