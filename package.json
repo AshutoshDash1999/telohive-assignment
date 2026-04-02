@@ -3,9 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "concurrently -k -n APP,API -c blue,magenta \"npm:dev:app\" \"npm:dev:api\"",
-    "dev:app": "next dev",
-    "dev:api": "json-server --watch db.json --port 4000",
+    "dev": "next dev",
+    "seed:db": "node scripts/seed-db.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -32,11 +31,9 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "husky": "^9.1.7",
-    "json-server": "^1.0.0-beta.15",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
