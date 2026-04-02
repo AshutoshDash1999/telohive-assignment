@@ -5,6 +5,7 @@ interface Params {
   params: Promise<{ id: string }>;
 }
 
+// Returns one space by id and validates that the path param is numeric.
 export async function GET(_: Request, { params }: Params) {
   try {
     const { id } = await params;

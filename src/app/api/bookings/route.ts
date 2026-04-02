@@ -26,6 +26,7 @@ function toDisplayDateRange(startDate: string, endDate: string) {
   return `${start} - ${end}`;
 }
 
+// Returns booking rows enriched with space details for table display.
 export async function GET() {
   try {
     const db = await readDb();

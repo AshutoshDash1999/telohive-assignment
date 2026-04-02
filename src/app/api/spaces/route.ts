@@ -3,6 +3,7 @@ import { parseSpacesQueryFromSearchParams } from "@/lib/discovery/query-state";
 import { readDb } from "@/lib/server/mock-db";
 import { querySpaces } from "@/lib/server/spaces-query";
 
+// Returns a paginated, filterable list of spaces with metadata for UI filters and totals.
 export async function GET(request: Request) {
   try {
     const db = await readDb();

@@ -24,6 +24,7 @@ function toDisplayDateRange(startDate: string, endDate: string) {
   return `${start} - ${end}`;
 }
 
+// Updates a booking status by id with strict status validation and returns the mapped row payload.
 export async function PATCH(request: Request, { params }: Params) {
   try {
     const { id } = await params;
