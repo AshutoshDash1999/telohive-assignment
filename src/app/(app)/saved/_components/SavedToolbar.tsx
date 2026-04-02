@@ -30,7 +30,10 @@ export function SavedToolbar({
   const hasFilters = searchValue.length > 0 || selectedCategory.length > 0 || selectedCity.length > 0;
 
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4">
+    <div
+      className="rounded-xl border border-zinc-200 bg-white p-4"
+      data-testid="saved-toolbar"
+    >
       <div className="flex flex-col gap-3 lg:flex-row lg:items-end">
         <div className="flex-1">
           <label htmlFor="saved-search" className="mb-1 block text-xs font-semibold uppercase text-zinc-500">
@@ -43,10 +46,11 @@ export function SavedToolbar({
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by name, city, or description"
             className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm outline-none transition ring-zinc-900/10 focus:border-zinc-400 focus:ring-2"
+            data-testid="saved-search-input"
           />
         </div>
 
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-[26rem]">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:w-104">
           <div>
             <label
               htmlFor="saved-category"
@@ -59,6 +63,7 @@ export function SavedToolbar({
               value={selectedCategory}
               onChange={(event) => onCategoryChange(event.target.value)}
               className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+              data-testid="saved-category-select"
             >
               <option value="">All categories</option>
               {categories.map((category) => (
@@ -78,6 +83,7 @@ export function SavedToolbar({
               value={selectedCity}
               onChange={(event) => onCityChange(event.target.value)}
               className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+              data-testid="saved-city-select"
             >
               <option value="">All cities</option>
               {cities.map((city) => (
@@ -99,6 +105,7 @@ export function SavedToolbar({
             type="button"
             onClick={onClearFilters}
             className="rounded px-2 py-1 text-xs font-medium text-zinc-700 transition hover:bg-zinc-100"
+            data-testid="saved-clear-filters-button"
           >
             Clear filters
           </button>

@@ -55,7 +55,10 @@ export function BookingsDataTable({
   onCancelOne,
 }: BookingsDataTableProps) {
   return (
-    <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
+    <div
+      className="overflow-hidden rounded-xl border border-zinc-200 bg-white"
+      data-testid="bookings-data-table"
+    >
       <div className="max-h-[560px] overflow-auto">
         <table className="w-full min-w-[900px] border-collapse text-sm">
           <thead className="sticky top-0 z-10 bg-zinc-100 text-zinc-700">
@@ -66,10 +69,15 @@ export function BookingsDataTable({
                   checked={allFilteredSelected}
                   onChange={onToggleSelectAllFiltered}
                   aria-label="Select all filtered bookings"
+                  data-testid="bookings-select-all-filtered"
                 />
               </th>
               <th className="px-3 py-2 text-left">
-                <button type="button" onClick={() => onToggleSort("spaceName")}>
+                <button
+                  type="button"
+                  onClick={() => onToggleSort("spaceName")}
+                  data-testid="bookings-sort-space-name"
+                >
                   <SortLabel
                     field="spaceName"
                     activeField={sortField}
@@ -79,7 +87,11 @@ export function BookingsDataTable({
                 </button>
               </th>
               <th className="px-3 py-2 text-left">
-                <button type="button" onClick={() => onToggleSort("startDate")}>
+                <button
+                  type="button"
+                  onClick={() => onToggleSort("startDate")}
+                  data-testid="bookings-sort-start-date"
+                >
                   <SortLabel
                     field="startDate"
                     activeField={sortField}
@@ -89,7 +101,11 @@ export function BookingsDataTable({
                 </button>
               </th>
               <th className="px-3 py-2 text-left">
-                <button type="button" onClick={() => onToggleSort("type")}>
+                <button
+                  type="button"
+                  onClick={() => onToggleSort("type")}
+                  data-testid="bookings-sort-type"
+                >
                   <SortLabel
                     field="type"
                     activeField={sortField}
@@ -99,7 +115,11 @@ export function BookingsDataTable({
                 </button>
               </th>
               <th className="px-3 py-2 text-left">
-                <button type="button" onClick={() => onToggleSort("status")}>
+                <button
+                  type="button"
+                  onClick={() => onToggleSort("status")}
+                  data-testid="bookings-sort-status"
+                >
                   <SortLabel
                     field="status"
                     activeField={sortField}
@@ -109,7 +129,11 @@ export function BookingsDataTable({
                 </button>
               </th>
               <th className="px-3 py-2 text-right">
-                <button type="button" onClick={() => onToggleSort("amount")}>
+                <button
+                  type="button"
+                  onClick={() => onToggleSort("amount")}
+                  data-testid="bookings-sort-amount"
+                >
                   <SortLabel
                     field="amount"
                     activeField={sortField}
@@ -133,6 +157,7 @@ export function BookingsDataTable({
                       checked={isSelected}
                       onChange={() => onToggleRowSelection(booking.id)}
                       aria-label={`Select booking ${booking.id}`}
+                      data-testid={`bookings-row-checkbox-${booking.id}`}
                     />
                   </td>
                   <td className="px-3 py-2 font-medium text-zinc-900">{booking.spaceName}</td>
@@ -154,6 +179,7 @@ export function BookingsDataTable({
                       onClick={() => onCancelOne(booking.id)}
                       disabled={isCancelled(booking.status) || isCancelling || isBulkCancelling}
                       className="rounded-md border border-zinc-300 px-2.5 py-1 text-xs font-medium text-zinc-700 disabled:cursor-not-allowed disabled:opacity-50"
+                      data-testid={`bookings-cancel-button-${booking.id}`}
                     >
                       {isCancelling ? "Cancelling..." : "Cancel"}
                     </button>

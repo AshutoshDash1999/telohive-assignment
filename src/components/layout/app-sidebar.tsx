@@ -40,6 +40,7 @@ export function AppSidebar() {
                                     ? "bg-zinc-900 text-white"
                                     : "text-zinc-700 hover:bg-zinc-100"
                                 }`}
+                            data-testid={`app-nav-${item.label.toLowerCase()}`}
                         >
                             {item.label}
                         </Link>
@@ -67,6 +68,7 @@ export function AppSidebar() {
                         router.push("/login");
                     }}
                     className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm font-medium text-zinc-700 transition hover:bg-zinc-100"
+                    data-testid="app-logout-button"
                 >
                     Logout
                 </button>

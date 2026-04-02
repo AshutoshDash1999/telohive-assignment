@@ -31,6 +31,32 @@ interface UseBookingsFiltersResult {
   updateQuery: (recipe: (current: BookingsQueryParams) => BookingsQueryParams) => void;
 }
 
+export function filterBookings({
+  items,
+  searchValue,
+  selectedStatuses,
+  startDate,
+  endDate,
+}: {
+  items: BookingListItem[];
+  searchValue: string;
+  selectedStatuses: BookingStatus[];
+  startDate: string;
+  endDate: string;
+}) {
+  const lowerSearch = searchValue.trim().toLowerCase();
+  const selectedStatusSet = new Set(selectedStatuses);
+
+  return items.filter((item) => {
+    const matchesSearch =
+      lowerSearch.length === 0 || item.spaceName.toLowerCase().includes(lowerSearch);
+    const matchesStatus = selectedStatusSet.size === 0 || selectedStatusSet.has(item.status);
+    const matchesDate = matchesDateRange(item, startDate, endDate);
+
+    return matchesSearch && matchesStatus && matchesDate;
+  });
+}
+
 export function useBookingsFilters({
   bookings,
 }: UseBookingsFiltersParams): UseBookingsFiltersResult {
@@ -59,18 +85,12 @@ export function useBookingsFilters({
   const endDate = urlQuery.endDate;
 
   const filteredBookings = useMemo(() => {
-    const items = bookings ?? [];
-    const lowerSearch = searchValue.trim().toLowerCase();
-    const selectedStatusSet = new Set(selectedStatuses);
-
-    return items.filter((item) => {
-      const matchesSearch =
-        lowerSearch.length === 0 || item.spaceName.toLowerCase().includes(lowerSearch);
-      const matchesStatus =
-        selectedStatusSet.size === 0 || selectedStatusSet.has(item.status);
-      const matchesDate = matchesDateRange(item, startDate, endDate);
-
-      return matchesSearch && matchesStatus && matchesDate;
+    return filterBookings({
+      items: bookings ?? [],
+      searchValue,
+      selectedStatuses,
+      startDate,
+      endDate,
     });
   }, [bookings, endDate, searchValue, selectedStatuses, startDate]);
 

@@ -42,7 +42,10 @@ export function FiltersModal({
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 p-4">
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-zinc-900/40 p-4"
+      data-testid="discovery-filters-modal"
+    >
       <div className="flex h-[80vh] w-full max-w-5xl flex-col overflow-hidden rounded-xl border border-zinc-200 bg-white shadow-xl">
         <div className="flex items-center justify-between border-b border-zinc-200 px-4 py-3">
           <h2 className="text-base font-semibold text-zinc-900">Filters (AND logic)</h2>
@@ -50,6 +53,7 @@ export function FiltersModal({
             type="button"
             onClick={onClose}
             className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 transition hover:bg-zinc-100"
+            data-testid="discovery-filters-close-button"
           >
             Close
           </button>
@@ -68,6 +72,7 @@ export function FiltersModal({
                       ? "bg-zinc-900 text-white"
                       : "text-zinc-700 hover:bg-zinc-100"
                   }`}
+                  data-testid={`discovery-filter-section-${section.key}`}
                 >
                   {section.label}
                 </button>
@@ -85,6 +90,7 @@ export function FiltersModal({
             type="button"
             onClick={onClearAll}
             className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700 transition hover:bg-zinc-100"
+            data-testid="discovery-clear-filters-button"
           >
             Clear all
           </button>
@@ -92,6 +98,7 @@ export function FiltersModal({
             type="button"
             onClick={onApply}
             className="rounded-md bg-zinc-900 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-zinc-800"
+            data-testid="discovery-apply-filters-button"
           >
             Apply filters
           </button>

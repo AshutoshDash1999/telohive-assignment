@@ -28,7 +28,10 @@ export function BookingsFilters({
   onClearFilters,
 }: BookingsFiltersProps) {
   return (
-    <div className="rounded-xl border border-zinc-200 bg-white p-4">
+    <div
+      className="rounded-xl border border-zinc-200 bg-white p-4"
+      data-testid="bookings-filters"
+    >
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-4">
         <label className="space-y-1 lg:col-span-2">
           <span className="text-xs font-semibold uppercase tracking-wide text-zinc-500">
@@ -40,6 +43,7 @@ export function BookingsFilters({
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Search by space name..."
             className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+            data-testid="bookings-search-input"
           />
         </label>
 
@@ -52,6 +56,7 @@ export function BookingsFilters({
             value={startDate}
             onChange={(event) => onStartDateChange(event.target.value)}
             className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+            data-testid="bookings-start-date-input"
           />
         </label>
 
@@ -64,6 +69,7 @@ export function BookingsFilters({
             value={endDate}
             onChange={(event) => onEndDateChange(event.target.value)}
             className="w-full rounded-md border border-zinc-300 px-3 py-2 text-sm"
+            data-testid="bookings-end-date-input"
           />
         </label>
       </div>
@@ -76,6 +82,7 @@ export function BookingsFilters({
               type="checkbox"
               checked={selectedStatuses.includes(option.value)}
               onChange={() => onToggleStatus(option.value)}
+              data-testid={`bookings-status-checkbox-${option.value}`}
             />
             {option.label}
           </label>
@@ -84,6 +91,7 @@ export function BookingsFilters({
           type="button"
           onClick={onClearFilters}
           className="ml-auto rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-700"
+          data-testid="bookings-clear-filters-button"
         >
           Clear filters
         </button>
