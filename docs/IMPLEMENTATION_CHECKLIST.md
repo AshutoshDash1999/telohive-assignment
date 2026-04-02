@@ -92,20 +92,20 @@
 
 ## Step 7 - Discovery Grid, Sorting, and Virtualization
 
-- [ ] Build responsive space card grid
-- [ ] Add sorting (price asc/desc, rating, capacity, newest)
-- [ ] Implement save/unsave toggle wiring
+- [x] Build responsive space card grid
+- [x] Add sorting (price asc/desc, rating, capacity, newest)
+- [x] Implement save/unsave toggle wiring
 - [ ] Add virtualization for 500+ items (`@tanstack/react-virtual`)
-- [ ] Add robust loading/empty/error states
+- [x] Add robust loading/empty/error states
 - [ ] Commit: `feat(discovery): add virtualized results grid and sorting`
 
 ## Step 8 - Saved Collection
 
-- [ ] Show saved spaces grid
-- [ ] Add search within saved
-- [ ] Add saved filters (category/city)
-- [ ] Add remove-from-saved behavior
-- [ ] Add empty state with CTA to discovery
+- [x] Show saved spaces grid
+- [x] Add search within saved
+- [x] Add saved filters (category/city)
+- [x] Add remove-from-saved behavior
+- [x] Add empty state with CTA to discovery
 - [ ] Commit: `feat(saved): implement saved collection page and interactions`
 
 ## Step 9 - Dashboard Overview

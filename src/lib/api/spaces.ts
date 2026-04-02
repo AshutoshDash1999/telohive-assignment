@@ -27,7 +27,7 @@ export function spacesQueryKey(query: SpacesQueryParams) {
 
 export async function fetchSpaces(
   query: SpacesQueryParams,
-  baseUrl = ""
+  baseUrl = "",
 ): Promise<SpacesListResponse> {
   const searchParams = toSpacesSearchParams(query);
   const queryString = searchParams.toString();

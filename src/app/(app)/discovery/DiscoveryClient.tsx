@@ -9,6 +9,7 @@ import {
   parseSpacesQueryFromSearchParams,
   toSpacesSearchParams,
 } from "@/lib/discovery/query-state";
+import { useSavedSpacesStore } from "@/store/saved-spaces-store";
 import type { SpacesQueryParams } from "@/types/api";
 import { ActiveFilterChips } from "./_components/ActiveFilterChips";
 import { DiscoveryPagination } from "./_components/DiscoveryPagination";
@@ -34,10 +35,12 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [searchInput, setSearchInput] = useState(initialQuery.q);
-  const [savedIds, setSavedIds] = useState<Set<number>>(new Set());
   const [isFiltersModalOpen, setIsFiltersModalOpen] = useState(false);
   const [activeFilterSection, setActiveFilterSection] =
     useState<FilterSectionKey>("category");
+  const savedSpaceIds = useSavedSpacesStore((state) => state.savedSpaceIds);
+  const toggleSavedSpace = useSavedSpacesStore((state) => state.toggleSavedSpace);
+  const savedIds = useMemo(() => new Set(savedSpaceIds), [savedSpaceIds]);
 
   const urlQuery = useMemo(
     () => parseSpacesQueryFromSearchParams(new URLSearchParams(searchParams.toString())),
@@ -144,19 +147,6 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
   function onClearAllFilters() {
     setSearchInput("");
     router.replace("/discovery", { scroll: false });
-  }
-
-  function toggleSave(spaceId: number) {
-    setSavedIds((previous) => {
-      const next = new Set(previous);
-      if (next.has(spaceId)) {
-        next.delete(spaceId);
-      } else {
-        next.add(spaceId);
-      }
-
-      return next;
-    });
   }
 
   const activeChips = [
@@ -434,7 +424,11 @@ export function DiscoveryClient({ initialQuery }: DiscoveryClientProps) {
 
       {!spacesQuery.isLoading && !spacesQuery.isError && spaces.length > 0 ? (
         <>
-          <SpacesGrid spaces={spaces} savedIds={savedIds} onToggleSave={toggleSave} />
+          <SpacesGrid
+            spaces={spaces}
+            savedIds={savedIds}
+            onToggleSave={toggleSavedSpace}
+          />
           <DiscoveryPagination
             page={page}
             pageSize={urlQuery.pageSize}
