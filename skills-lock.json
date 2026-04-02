@@ -26,6 +26,11 @@
       "sourceType": "github",
       "computedHash": "f54f39ce967af3a4bba1f662c3600f0253467508d5fbbc7c545c67e102da2253"
     },
+    "typescript-react-reviewer": {
+      "source": "dotneet/claude-code-marketplace",
+      "sourceType": "github",
+      "computedHash": "21fa76f3823df89fbd4e299d03772aaaa5c1d67c586a8b9b51d1888431acd84a"
+    },
     "ui-ux-pro-max": {
       "source": "nextlevelbuilder/ui-ux-pro-max-skill",
       "sourceType": "github",

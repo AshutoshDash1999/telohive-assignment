@@ -125,27 +125,26 @@
 
 ## Step 11 - Tests
 
-- [ ] Add unit tests for:
-  - [ ] filter composition logic
-  - [ ] sort logic
-  - [ ] URL param serialize/deserialize
-  - [ ] at least one custom hook
-- [ ] Ensure tests run cleanly in CI/local
-- [ ] Commit: `test(core): add unit tests for filters sorting url-state and hooks`
+- [x] Add unit tests for:
+  - [x] filter composition logic
+  - [x] sort logic
+  - [x] URL param serialize/deserialize
+  - [x] at least one custom hook
+- [x] Ensure tests run cleanly in CI/local
 
 ## Step 12 - Documentation and Final Polish
 
-- [ ] Replace starter README with assignment-specific documentation:
-  - [ ] setup and run instructions (app + json-server)
-  - [ ] testing instructions
-  - [ ] architecture overview
-  - [ ] server/client component boundary rationale
-  - [ ] filter URL state design rationale
-  - [ ] virtualization choice rationale
-  - [ ] trade-offs
-  - [ ] prioritized future improvements
-  - [ ] time spent
-- [ ] Validate lint + tests + build
+- [x] Replace starter README with assignment-specific documentation:
+  - [x] setup and run instructions (app + json-server)
+  - [x] testing instructions
+  - [x] architecture overview
+  - [x] server/client component boundary rationale
+  - [x] filter URL state design rationale
+  - [x] virtualization choice rationale
+  - [x] trade-offs
+  - [x] prioritized future improvements
+  - [x] time spent
+- [x] Validate lint + tests + build
 - [ ] Commit: `docs(readme): document architecture decisions and setup`
 
 ## Optional Final Step - Deployment
