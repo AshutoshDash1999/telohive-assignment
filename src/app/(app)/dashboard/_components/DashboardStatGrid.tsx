@@ -1,3 +1,6 @@
+"use client";
+
+import { SequentialReveal } from "@/components/animation/SequentialReveal";
 import { formatUsdCurrency } from "@/lib/format/currency";
 
 interface StatCard {
@@ -192,7 +195,9 @@ export function DashboardStatGrid({ savedSpacesCount }: DashboardStatGridProps) 
   const stats = buildStats(savedSpacesCount);
 
   return (
-    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+    <SequentialReveal
+      className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4"
+    >
       {stats.map((card) => (
         <article
           key={card.key}
@@ -212,6 +217,6 @@ export function DashboardStatGrid({ savedSpacesCount }: DashboardStatGridProps) 
           </p>
         </article>
       ))}
-    </div>
+    </SequentialReveal>
   );
 }

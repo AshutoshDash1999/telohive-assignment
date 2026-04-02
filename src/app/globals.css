@@ -18,3 +18,38 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+::view-transition-group(root) {
+  animation-duration: 300ms;
+  animation-timing-function: ease;
+}
+
+::view-transition-old(root) {
+  animation-name: root-blur-out;
+}
+
+::view-transition-new(root) {
+  animation-name: root-blur-in;
+}
+
+@keyframes root-blur-out {
+  from {
+    opacity: 1;
+    filter: blur(0px);
+  }
+  to {
+    opacity: 0.35;
+    filter: blur(8px);
+  }
+}
+
+@keyframes root-blur-in {
+  from {
+    opacity: 0.45;
+    filter: blur(8px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0px);
+  }
+}

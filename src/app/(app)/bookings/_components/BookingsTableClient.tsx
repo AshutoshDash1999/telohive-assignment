@@ -1,5 +1,7 @@
 "use client";
 
+import { SequentialReveal } from "@/components/animation/SequentialReveal";
+
 import { BookingsBulkActions } from "./BookingsBulkActions";
 import { BookingsDataTable } from "./BookingsDataTable";
 import { BookingsFilters } from "./BookingsFilters";
@@ -60,7 +62,7 @@ export function BookingsTableClient() {
   }
 
   return (
-    <div className="mt-4 space-y-4">
+    <SequentialReveal className="mt-4 space-y-4">
       <BookingsFilters
         searchValue={searchValue}
         startDate={startDate}
@@ -105,6 +107,6 @@ export function BookingsTableClient() {
           onCancelOne={onCancelOne}
         />
       )}
-    </div>
+    </SequentialReveal>
   );
 }

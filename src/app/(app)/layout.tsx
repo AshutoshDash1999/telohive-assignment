@@ -12,7 +12,7 @@ export default function ProtectedAppLayout({
         <AuthGuard>
             <div className="flex min-h-screen bg-zinc-50">
                 <AppSidebar />
-                <main className="flex-1 p-6 h-screen overflow-y-auto">{children}</main>
+                <main className="h-screen flex-1 overflow-y-auto p-6">{children}</main>
             </div>
         </AuthGuard>
     );

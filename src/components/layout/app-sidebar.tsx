@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { Link, useTransitionRouter } from "next-view-transitions";
 
 import { getUserInitials, useAuthStore } from "@/store/auth-store";
 
@@ -14,7 +14,7 @@ const navItems: Array<{ href: string; label: string }> = [
 
 export function AppSidebar() {
     const pathname = usePathname();
-    const router = useRouter();
+    const router = useTransitionRouter();
     const user = useAuthStore((state) => state.user);
     const logout = useAuthStore((state) => state.logout);
 

@@ -1,8 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { Link, useTransitionRouter } from "next-view-transitions";
 
 import { AuthCardShell } from "@/components/auth/AuthCardShell";
 import { PasswordField } from "@/components/auth/PasswordField";
@@ -15,7 +14,7 @@ import {
 import { useAuthStore } from "@/store/auth-store";
 
 export default function RegisterPage() {
-  const router = useRouter();
+  const router = useTransitionRouter();
   const initialize = useAuthStore((state) => state.initialize);
   const isHydrated = useAuthStore((state) => state.isHydrated);
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
