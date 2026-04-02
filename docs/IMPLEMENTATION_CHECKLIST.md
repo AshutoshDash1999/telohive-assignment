@@ -110,21 +110,19 @@
 
 ## Step 9 - Dashboard Overview
 
-- [ ] Create stats cards with trend indicators
-- [ ] Build activity chart using Recharts
-- [ ] Add upcoming bookings list with status badges
-- [ ] Commit: `feat(dashboard): add overview metrics and activity chart`
+- [x] Create stats cards with trend indicators
+- [x] Build activity chart using Recharts
+- [x] Add upcoming bookings list with status badges
 
 ## Step 10 - Bookings Table
 
-- [ ] Build bookings table with required columns
-- [ ] Add search, status/date filters, and sorting
-- [ ] Add sticky header
-- [ ] Add row selection with filtered select-all behavior
-- [ ] Add bulk cancel via PATCH per selected booking
-- [ ] Add CSV export
-- [ ] Add loading/empty/error + retry states
-- [ ] Commit: `feat(bookings): implement searchable sortable bookings table with bulk actions`
+- [x] Build bookings table with required columns
+- [x] Add search, status/date filters, and sorting
+- [x] Add sticky header
+- [x] Add row selection with filtered select-all behavior
+- [x] Add bulk cancel via PATCH per selected booking
+- [x] Add CSV export
+- [x] Add loading/empty/error + retry states
 
 ## Step 11 - Tests
 
