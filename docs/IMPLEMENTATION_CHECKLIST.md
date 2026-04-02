@@ -50,20 +50,20 @@
 
 ## Step 4 - Authentication (Single Commit)
 
-- [ ] Build Login page:
-  - [ ] email/password fields
-  - [ ] show/hide password toggle
-  - [ ] remember me
-  - [ ] forgot password toast
-  - [ ] social login buttons (UI only, guest login behavior)
-  - [ ] inline validation errors
-- [ ] Build Register page:
-  - [ ] required fields
-  - [ ] password length + match validation
-  - [ ] inline validation errors
-- [ ] Implement mock session storage logic (`localStorage` / `sessionStorage`)
-- [ ] Add protected route guard and redirect behavior
-- [ ] Add sidebar user info + logout
+- [x] Build Login page:
+  - [x] email/password fields
+  - [x] show/hide password toggle
+  - [x] remember me
+  - [x] forgot password toast
+  - [x] social login buttons (UI only, guest login behavior)
+  - [x] inline validation errors
+- [x] Build Register page:
+  - [x] required fields
+  - [x] password length + match validation
+  - [x] inline validation errors
+- [x] Implement mock session storage logic (`localStorage` / `sessionStorage`)
+- [x] Add protected route guard and redirect behavior
+- [x] Add sidebar user info + logout
 - [ ] Commit: `feat(auth): implement mock auth flow with protected routes`
 
 ## Step 5 - Discovery Search and Filter Engine
