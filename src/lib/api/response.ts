@@ -5,7 +5,7 @@ import type { ApiResponse } from "@/types/api";
 export function apiSuccess<T>(
   data: T,
   status = 200,
-  meta?: Record<string, unknown>
+  meta?: unknown
 ) {
   const body: ApiResponse<T> = {
     success: true,
