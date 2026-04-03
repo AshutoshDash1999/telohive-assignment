@@ -13,9 +13,11 @@ const spaces: Space[] = [
     pricePerDay: 200,
     capacity: 50,
     rating: 4.8,
+    reviewCount: 102,
     amenities: ["WiFi", "Parking", "AV Equipment"],
     imageUrl: "https://example.com/alpha.jpg",
     description: "Large studio for events",
+    createdAt: "2025-02-10",
   },
   {
     id: 11,
@@ -25,9 +27,11 @@ const spaces: Space[] = [
     pricePerDay: 200,
     capacity: 20,
     rating: 4.2,
+    reviewCount: 48,
     amenities: ["WiFi"],
     imageUrl: "https://example.com/beta.jpg",
     description: "Compact meeting room",
+    createdAt: "2025-03-05",
   },
   {
     id: 12,
@@ -37,9 +41,11 @@ const spaces: Space[] = [
     pricePerDay: 300,
     capacity: 100,
     rating: 4.9,
+    reviewCount: 216,
     amenities: ["WiFi", "Parking", "Catering"],
     imageUrl: "https://example.com/gamma.jpg",
     description: "Hall for large teams",
+    createdAt: "2025-01-22",
   },
 ];
 

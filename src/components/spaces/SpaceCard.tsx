@@ -57,7 +57,9 @@ export function SpaceCard({
 
         <div className="flex flex-wrap gap-2 text-xs text-zinc-600">
           <span className="rounded bg-zinc-100 px-2 py-1">{space.category}</span>
-          <span className="rounded bg-zinc-100 px-2 py-1">★ {space.rating.toFixed(1)}</span>
+          <span className="rounded bg-zinc-100 px-2 py-1">
+            ★ {space.rating.toFixed(1)} ({space.reviewCount})
+          </span>
           <span className="rounded bg-zinc-100 px-2 py-1">Capacity {space.capacity}</span>
         </div>
 

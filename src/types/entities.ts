@@ -17,9 +17,11 @@ export interface Space {
   pricePerDay: number;
   capacity: number;
   rating: number;
+  reviewCount: number;
   amenities: string[];
   imageUrl: string;
   description: string;
+  createdAt: string;
 }
 
 export interface Booking {

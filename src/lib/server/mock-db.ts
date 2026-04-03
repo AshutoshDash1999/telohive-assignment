@@ -100,6 +100,7 @@ function addDays(isoDate: string, days: number) {
 
 function generateSpaces(total = 520): Space[] {
   const spaces: Space[] = [];
+  const baseDate = "2025-01-01";
 
   for (let i = 1; i <= total; i += 1) {
     const city = randomItem(CITIES);
@@ -114,9 +115,11 @@ function generateSpaces(total = 520): Space[] {
       pricePerDay: randomInt(35, 420),
       capacity,
       rating: Number((3.2 + Math.random() * 1.8).toFixed(1)),
+      reviewCount: randomInt(12, 650),
       amenities: sampleItems(AMENITIES, randomInt(3, 6)),
       imageUrl: `https://picsum.photos/seed/space-${i}/800/500`,
       description: `${category} in ${city} with capacity for ${capacity} people.`,
+      createdAt: addDays(baseDate, randomInt(0, 420)),
     });
   }
 
