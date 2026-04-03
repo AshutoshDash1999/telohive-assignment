@@ -3,6 +3,7 @@
 This project is a Next.js App Router dashboard for discovering spaces, saving favorites, viewing bookings, and tracking activity.
 
 Live URL: https://telohive-assignment.vercel.app
+Total Time: 13-15hours
 
 ## Tech Stack
 
